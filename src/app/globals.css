@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --color-brand: #00A16F;
+  --color-brand-hover: #00A16F;
+  --color-border: #E5E5E5;
+  --color-text: #1A1A1A;
+  --color-puple: #7851BC;
+  --color-orange: #FFA600;
+  --color-sky: #F5FAFE;
+  --color-empty: #F5F5F5;
+  --color-blue: #007AFF;
+  --color-grey: #4D4D4D;
+}
+
+
+
+
+@layer utilities {
+  .icon-green-hover img {
+    transition: all 0.3s ease;
+  }
+  .icon-green-hover:hover img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(97%)
+      saturate(447%) hue-rotate(122deg) brightness(91%) contrast(87%);
+  }
+}
+
+
