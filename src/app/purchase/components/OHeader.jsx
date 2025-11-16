@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import React from "react";
-import { ChevronLeft, Clock, Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-// 🔹 Common utility classes (DRY)
+// keep your existing class names unchanged
 const iconBtn =
   "hidden sm:inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900";
 const actionBtnBase =
@@ -17,6 +17,11 @@ export default function OHeader({
   onGenerateGRN = () => console.log("generate grn"),
   onGenerateMRN = () => console.log("generate mrn"),
 }) {
+  const router = useRouter();
+
+  // <-- set this to your actual timeline/list route
+  const TIMELINE_ROUTE = "/purchase/list";
+
   return (
     <header className=" border-gray-200">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,13 +33,13 @@ export default function OHeader({
               aria-label="Go back"
               className="p-1 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             >
-             <Image
-                          src="/icons/arrow.svg"
-                          alt="Back"
-                          width={20}
-                          height={20}
-                          className="cursor-pointer"
-                        />
+              <Image
+                src="/icons/arrow.svg"
+                alt="Back"
+                width={20}
+                height={20}
+                className="cursor-pointer"
+              />
             </button>
 
             <div className="min-w-0">
@@ -48,20 +53,22 @@ export default function OHeader({
           <div className="flex items-center gap-1">
             {/* Icons */}
             <div className="flex items-center">
-              <button type="button" title="Activity" className={iconBtn}>
-                <img
-                  src="/icons/clock.svg"
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                />
+
+              {/* Clock button: navigate to timeline/list page */}
+              <button
+                type="button"
+                title="Activity"
+                className={iconBtn}
+                onClick={() => router.push(TIMELINE_ROUTE)}
+                aria-label="Open timeline"
+              >
+                <img src="/icons/clock.svg" alt="" />
               </button>
 
               <button type="button" title="Print" className={iconBtn}>
                 <img
                   src="/icons/icons.svg"
                   alt=""
-                  aria-hidden="true"
                   loading="lazy"
                 />
               </button>
