@@ -18,16 +18,25 @@ function BlockProgress({
   const filled = Math.floor((clamped / 100) * blocks);
 
   return (
-    // aria-hidden visually, but provide sr-only text for screen readers
     <div className={`flex items-center ${gapClass}`} aria-hidden>
       {Array.from({ length: blocks }).map((_, i) => {
-        const cls = `${i < filled ? filledClass : emptyClass} ${blockClass} rounded-sm`;
+        const cls = `${i < filled ? filledClass : emptyClass} ${blockClass}`;
         return <span key={i} className={cls} />;
       })}
       <span className="sr-only">{clamped}%</span>
     </div>
   );
 }
+
+/* ---------------------------
+  Common class snippets
+  --------------------------- */
+const cardBase = "bg-white border border-(--color-border) rounded-md";
+const outerCard = `${cardBase} overflow-hidden`;
+const paddedCard = `${cardBase} p-4`;
+const tableBase = "min-w-full text-xs md:text-sm border-collapse";
+const headerRowBase = "bg-[#E5E5E5] text-[11px] md:text-xs";
+const cellBase = "py-2 px-2 md:px-3 border border-(--color-border)`";
 
 /* ---------------------------
   Mock data
@@ -131,10 +140,11 @@ export default function RouteDetailsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="bg-white border border-(--color-border) rounded-md overflow-hidden">
+    // max-w-7xl mx-auto hata hua hi rahe
+    <div className="w-full -mt-3">
+      <div className={outerCard}>
         {/* Header */}
-        <div className="px-4 py-3 border-b border-(--color-border) flex items-center justify-between">
+        <div className="px-4 py-3 border-b border-(--color-border) flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -150,15 +160,27 @@ export default function RouteDetailsPage() {
                 stroke="currentColor"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
-              <span className="font-medium text-sm">{route.name}</span>
+              <span className="font-semibold truncate max-w-[220px] sm:max-w-xs">
+                {route.name}
+              </span>
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center bg-white border border-(--color-border) rounded px-3 py-1">
-              <BlockProgress value={route.overall} blocks={10} blockClass="w-3 h-3" gapClass="gap-1" />
+          <div className="flex items-center gap-3 ">
+            <div className="flex items-center bg-white border border-(--color-border) rounded px-3 py-2">
+              <BlockProgress
+                value={route.overall}
+                blocks={10}
+                blockClass="w-4 h-4"
+                gapClass="gap-1"
+              />
               <div className="text-sm font-medium ml-2" aria-hidden>
                 {route.overall}
               </div>
@@ -167,34 +189,51 @@ export default function RouteDetailsPage() {
         </div>
 
         {/* BODY */}
-        <div className="p-4 space-y-4">
+        <div className="p-3 space-y-4">
           {/* Timeline Section */}
-          <div className="bg-white border border-(--color-border) rounded-md p-4">
+          <div className={paddedCard}>
             <div className="space-y-3">
               {TIMELINE.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3">
+                <div
+                  key={idx}
+                  className="flex flex-col md:flex-row items-start gap-2"
+                >
                   {/* DATE */}
-                  <div className="w-25 flex items-center gap-2 mt-1">
-                    <img src="/icons/check.svg" alt="" aria-hidden="true" className="w-4 h-4" loading="lazy" />
-                    <div className="text-xs text-(--color-grey)">{item.date}</div>
+                  <div className="w-full md:w-25 flex items-center gap-2 mt-2">
+                    <img
+                      src="/icons/check.svg"
+                      alt=""
+                      aria-hidden="true"
+                      className="w-4 h-4"
+                      loading="lazy"
+                    />
+                    <div className="text-xs text-(--color-grey) whitespace-nowrap">
+                      {item.date}
+                    </div>
                   </div>
 
                   {/* LINE + ICON IN CENTER */}
                   <div className="w-6 flex flex-col items-center">
                     <div className="mt-1 flex items-center justify-center">
-                      {/* replaceable icon */}
-                      <img src="/icons/dot.svg" alt={`${item.title} status`} className="w-4 h-4" loading="lazy" />
+                      <img
+                        src="/icons/dot.svg"
+                        alt={`${item.title} status`}
+                        className="w-4 h-4 hidden md:block"
+                        loading="lazy"
+                      />
                     </div>
-
-                   <div className="w-px bg-(--color-brand) flex-1 mt-0.5" style={{ minHeight: 90 }} aria-hidden />
-
+                    <div
+                      className="hidden md:block w-px bg-(--color-brand) flex-1 mt-0.5"
+                      style={{ minHeight: 90 }}
+                      aria-hidden
+                    />
                   </div>
 
-                  {/* RIGHT SIDE CONTENT (TITLE + BOXES) */}
+                  {/* RIGHT SIDE CONTENT */}
                   <div className="flex-1">
-                    <div className="mb-3 font-semibold">{item.title}</div>
+                    <div className="mb-2 font-semibold">{item.title}</div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-0 items-start">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 items-start">
                       {[
                         { key: "td", label: "T & D" },
                         { key: "blowing", label: "Blowing" },
@@ -205,24 +244,30 @@ export default function RouteDetailsPage() {
                         const val = item.stats?.[g.key] ?? 0;
 
                         return (
-                          <div key={g.key} className="border border-(--color-border) bg-white flex flex-col">
+                          <div
+                            key={g.key}
+                            className="border border-(--color-border) bg-white flex flex-col"
+                          >
                             <div className="text-xs border-b border-(--color-border) mb-3 p-2 text-center font-medium bg-[#E5E5E5]">
                               {g.label}
                             </div>
 
-                            <div className="px-2 pb-3">
+                            <div className="px-3 pb-3">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1">
                                   <BlockProgress
                                     value={val}
                                     blocks={10}
-                                    blockClass="w-3 h-5"
+                                    blockClass="w-3.5 h-5"
                                     gapClass="gap-1"
                                     filledClass="bg-[var(--color-orange)]"
                                     emptyClass="bg-[var(--color-empty)]"
                                   />
                                 </div>
-                                <div className="text-xs w-10 text-right" aria-label={`${g.label} progress`}>
+                                <div
+                                  className="text-xs w-10 text-right"
+                                  aria-label={`${g.label} progress`}
+                                >
                                   {val}
                                 </div>
                               </div>
@@ -238,34 +283,50 @@ export default function RouteDetailsPage() {
           </div>
 
           {/* Materials Table */}
-          <div className="bg-white border border-(--color-border) rounded-md p-4">
+          <div className={paddedCard}>
             <div className="text-sm font-medium mb-2">Materials Details</div>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm border-collapse" role="table" aria-label="Materials details table">
+              <table
+                className={tableBase}
+                role="table"
+                aria-label="Materials details table"
+              >
                 <caption className="sr-only">Materials details</caption>
                 <thead>
-                  <tr className="text-xs bg-[#E5E5E5]">
-                    <th className="py-2 px-3 border border-(--color-border)">#</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Material Name</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Material Code</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Category</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Subcategory</th>
-                    <th className="py-2 px-3 border border-(--color-border)">HSN/SAC</th>
-                    <th className="py-2 px-3 border border-(--color-border)">UOM</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Qty</th>
+                  <tr className={headerRowBase}>
+                    <th className={cellBase}>#</th>
+                    <th className={cellBase}>Material Name</th>
+                    <th className={cellBase}>Material Code</th>
+                    <th className={cellBase}>Category</th>
+                    <th className={cellBase}>Subcategory</th>
+                    <th className={cellBase}>HSN/SAC</th>
+                    <th className={cellBase}>UOM</th>
+                    <th className={cellBase}>Qty</th>
                   </tr>
                 </thead>
                 <tbody>
                   {MATERIALS.map((m, i) => (
                     <tr key={m.id}>
-                      <td className="py-2 px-3  border border-(--color-border)">{i + 1}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.name}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.code}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.category}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.sub}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.hsn}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.uom}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{m.qty}</td>
+                      <td className={cellBase}>{i + 1}</td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.name}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.code}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.category}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.sub}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.hsn}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {m.uom}
+                      </td>
+                      <td className={cellBase}>{m.qty}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -274,32 +335,46 @@ export default function RouteDetailsPage() {
           </div>
 
           {/* Services Table */}
-          <div className="bg-white border border-(--color-border) rounded-md p-4">
+          <div className={paddedCard}>
             <div className="text-sm font-medium mb-2">Service Details</div>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm border-collapse" role="table" aria-label="Service details table">
+              <table
+                className={tableBase}
+                role="table"
+                aria-label="Service details table"
+              >
                 <caption className="sr-only">Service details</caption>
                 <thead>
-                  <tr className="bg-[#E5E5E5] text-xs">
-                    <th className="py-2 px-3 border border-(--color-border)">#</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Service Name</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Service Code</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Category</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Subcategory</th>
-                    <th className="py-2 px-3 border border-(--color-border)">UOM</th>
-                    <th className="py-2 px-3 border border-(--color-border)">Qty</th>
+                  <tr className={headerRowBase}>
+                    <th className={cellBase}>#</th>
+                    <th className={cellBase}>Service Name</th>
+                    <th className={cellBase}>Service Code</th>
+                    <th className={cellBase}>Category</th>
+                    <th className={cellBase}>Subcategory</th>
+                    <th className={cellBase}>UOM</th>
+                    <th className={cellBase}>Qty</th>
                   </tr>
                 </thead>
                 <tbody>
                   {SERVICES.map((s, i) => (
                     <tr key={s.id}>
-                      <td className="py-2 px-3 border border-(--color-border)">{i + 1}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.name}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.code}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.category}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.sub}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.uom}</td>
-                      <td className="py-2 px-3 border border-(--color-border)">{s.qty}</td>
+                      <td className={cellBase}>{i + 1}</td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {s.name}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {s.code}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {s.category}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {s.sub}
+                      </td>
+                      <td className={`${cellBase} whitespace-nowrap`}>
+                        {s.uom}
+                      </td>
+                      <td className={cellBase}>{s.qty}</td>
                     </tr>
                   ))}
                 </tbody>

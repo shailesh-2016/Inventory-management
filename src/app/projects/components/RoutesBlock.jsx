@@ -37,7 +37,7 @@ const BlockProgressInner = ({
         {Array.from({ length: blocks }).map((_, i) => (
           <span
             key={i}
-            className={`${blockClass} rounded-sm inline-block ${
+            className={`${blockClass} inline-block ${
               i < filled ? filledClass : emptyClass
             } mr-0.5`}
             aria-hidden
@@ -189,7 +189,7 @@ export default function RoutesBlock({ rows = null, initialState = "Gujarat" }) {
     <div className="bg-white border border-(--color-border) rounded-md overflow-hidden">
       {/* Tabs */}
       <div className="px-4 py-3 border-b border-gray-100">
-        <ul className="flex gap-4 text-sm overflow-x-auto no-scrollbar pb-1">
+        <ul className="flex gap-4 text-sm overflow-x-auto no-scrollbar pb-4">
           {states.map((s) => (
             <li key={s} className="shrink-0">
               <button

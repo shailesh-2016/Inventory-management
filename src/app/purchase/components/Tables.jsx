@@ -58,7 +58,7 @@ export default function PODetailsTables({
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       {/* Top header: 3 small boxes in one row (stack on small) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Box 1 */}
@@ -110,7 +110,7 @@ export default function PODetailsTables({
             <table className="w-full border-collapse">
               <tbody>
                 <Row label="Vendor" value={from.vendor} labelBg="bg-[#F5FAFE]" />
-                <Row label="Phone No." value={<a className="text-blue-600">{from.phone}</a>} labelBg="bg-[#F5FAFE]" />
+                <Row label="Phone No." value={<a className="text-(--color-blue)">{from.phone}</a>} labelBg="bg-[#F5FAFE]" />
                 <Row label="Address" value={from.address} labelBg="bg-[#F5FAFE]" />
                 <Row label="State" value={from.state} labelBg="bg-[#F5FAFE]" />
                 <Row label="City" value={from.city} labelBg="bg-[#F5FAFE]" />
@@ -133,7 +133,7 @@ export default function PODetailsTables({
               <tbody>
                 <Row label="Warehouse" value={to.warehouse} labelBg="bg-[#F5FAFE]" />
                 <Row label="Concern Person" value={to.person} labelBg="bg-[#F5FAFE]" />
-                <Row label="Phone No." value={<a className="text-[--color--blue]">{to.phone}</a>} labelBg="bg-[#F5FAFE]" />
+                <Row label="Phone No." value={<a className="text-(--color-blue)">{to.phone}</a>} labelBg="bg-[#F5FAFE]" />
                 <Row label="Address" value={to.address} labelBg="bg-[#F5FAFE]" />
                 <Row label="State" value={to.state} labelBg="bg-[#F5FAFE]" />
                 <Row label="City" value={to.city} labelBg="bg-[#F5FAFE]" />

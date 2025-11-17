@@ -2,15 +2,17 @@
 
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 /**
  * MaterialsAndPayment
  * Renders the materials table + payment info + payment summary.
- * - shadow removed
- * - common classes extracted
- * - color classes left unchanged
+ * - layout base responsive
+ * - colors same
  */
 export default function MaterialsAndPayment({
+
+  
   materials = [
     {
       id: 1,
@@ -62,26 +64,30 @@ export default function MaterialsAndPayment({
   const [expandedPayment, setExpandedPayment] = useState(null);
 
   // ---- common class snippets ----
-  const boxBase = "bg-white border border-(--color-border) rounded-md ";
-  const tableBase = "min-w-full text-sm border-collapse text-center";
+  const boxBase = "bg-white border border-(--color-border) rounded-md";
+  const tableBase = "min-w-full text-xs sm:text-sm border-collapse text-center";
   const thBase =
-    "py-2 px-3  text-sm font-medium  border border-(--color-border) ";
+    "py-2 px-2 sm:px-3 text-[11px] sm:text-sm font-medium border border-(--color-border)";
   const thRight =
-    "py-2 px-3 text-right text-xs  border border-(--color-border) ";
-  const tdBase = "py-2 px-3 border border-(--color-border) ";
-  const sectionHeader = "px-4 py-3 border-b border-(--color-border)";
+    "py-2 px-2 sm:px-3 text-right text-[11px] sm:text-xs border border-(--color-border)";
+  const tdBase =
+    "py-2 px-2 sm:px-3 text-xs sm:text-sm border border-(--color-border)";
+  const sectionHeader =
+    "px-3 sm:px-4 py-2.5 sm:py-3 border-b border-(--color-border)";
   const smallBadge =
-    "inline-flex px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded";
+    "inline-flex px-2 py-1 text-xs font-medium  text-[#FFA600] rounded";
+
+    const router = useRouter();
 
   return (
     <div className="space-y-6">
       {/* ===== Materials table ===== */}
-      <div className={`${boxBase} rounded-md`}>
-        <div className="px-4 py-3 border-b border-(--color-border)">
-          <h3 className="font-semibold">Materials</h3>
+      <div className={boxBase}>
+        <div className={sectionHeader}>
+          <h3 className="font-semibold text-sm sm:text-base">Materials</h3>
         </div>
 
-        <div className="overflow-x-auto ">
+        <div className="overflow-x-auto">
           <table className={tableBase}>
             <thead className="bg-[#E5E5E5]">
               <tr>
@@ -103,7 +109,7 @@ export default function MaterialsAndPayment({
                 const basic = (m.qty || 0) * (m.unitRate || 0);
                 return (
                   <tr key={m.id} className="hover:bg-gray-50">
-                    <td className={`${tdBase}`}>{idx + 1}</td>
+                    <td className={tdBase}>{idx + 1}</td>
                     <td className={tdBase}>{m.name}</td>
                     <td className={tdBase}>{m.code}</td>
                     <td className={tdBase}>{m.category}</td>
@@ -126,11 +132,13 @@ export default function MaterialsAndPayment({
       </div>
 
       {/* ===== Payment area: left table + right summary ===== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* left - payments table (spans 2 cols on lg) */}
         <div className={`${boxBase} lg:col-span-2`}>
           <div className={sectionHeader}>
-            <h3 className="font-semibold">Payment Info.</h3>
+            <h3 className="font-semibold text-sm sm:text-base">
+              Payment Info.
+            </h3>
           </div>
 
           <div className="overflow-x-auto">
@@ -138,12 +146,12 @@ export default function MaterialsAndPayment({
               <thead className="bg-[#E5E5E5]">
                 <tr>
                   <th className={`${tdBase} w-10`} />
-                  <th className={`${thBase}`}>#</th>
-                  <th className={`${thBase}`}>Date</th>
-                  <th className={`${thBase}`}>Transaction Id</th>
-                  <th className={`${thRight}`}>Amount</th>
-                  <th className={`${thBase}`}>Payment Mode</th>
-                  <th className={`${thBase}`}>Order Status</th>
+                  <th className={thBase}>#</th>
+                  <th className={thBase}>Date</th>
+                  <th className={thBase}>Transaction Id</th>
+                  <th className={thRight}>Amount</th>
+                  <th className={thBase}>Payment Mode</th>
+                  <th className={thBase}>Order Status</th>
                 </tr>
               </thead>
 
@@ -151,7 +159,7 @@ export default function MaterialsAndPayment({
                 {payments.map((p) => (
                   <React.Fragment key={p.id}>
                     <tr className="hover:bg-gray-50">
-                      <td className={`${tdBase}`}>
+                      <td className={tdBase}>
                         <button
                           onClick={() =>
                             setExpandedPayment((cur) =>
@@ -183,16 +191,18 @@ export default function MaterialsAndPayment({
                     </tr>
 
                     {expandedPayment === p.id && (
-                      <tr id={`payment-details-${p.id}`} className="bg-gray-50">
+                      <tr id={`payment-details-${p.id}`} className="bg-white">
                         <td colSpan={7} className={`${tdBase} py-3 px-4`}>
-                          <div className="text-sm font-medium mb-2">
+                       <div className="border border-(--color-border) p-3">
+                           <div className="text-sm font-medium mb-2 flex items-start border-b p-2 border-(--color-border)">
                             More Details
                           </div>
-                          <div className="text-sm text-gray-700">
+                          <div className=" flex items-start ml-2 ">
                             <div className="mb-2">
-                              <strong>VPA</strong> : {p.details?.vpa}
+                              <strong>VPA</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp; {p.details?.vpa}
                             </div>
                           </div>
+                       </div>
                         </td>
                       </tr>
                     )}
@@ -203,68 +213,75 @@ export default function MaterialsAndPayment({
           </div>
         </div>
 
-   {/* right - payment summary TABLE */}
-<div className={boxBase}>
-  <div className={sectionHeader}>
-    <h3 className="font-semibold">Payment Info.</h3>
-  </div>
+        {/* right - payment summary TABLE */}
+        <div className={boxBase}>
+          <div className={sectionHeader}>
+            <h3 className="font-semibold text-sm sm:text-base">
+              Payment Info.
+            </h3>
+          </div>
 
-  <div className="overflow-x-auto">
-    <table className="min-w-full text-sm border-collapse">
-      <tbody>
-        <tr>
-          <td className="px-3 py-2 border border-(--color-border) text-sm bg-[#F5FAFE]">
-            Basic Amount
-          </td>
-          <td className="px-3 py-2 border border-(--color-border) text-right font-medium">
-            ₹ {summary.basic.toFixed(2)}
-          </td>
-        </tr>
+          <div className="overflow-x-auto">
+            <table className="min-w-full font-medium text-sm sm:text-sm border-collapse">
+              <tbody>
+                <tr>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-xs sm:text-sm bg-[#F5FAFE]">
+                    Basic Amount
+                  </td>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-right font-medium">
+                    ₹ {summary.basic.toFixed(2)}
+                  </td>
+                </tr>
 
-        <tr>
-          <td className="px-3 py-2 border border-(--color-border) text-sm bg-[#F5FAFE]">
-            SGST (6%)
-          </td>
-          <td className="px-3 py-2 border border-(--color-border) text-right font-medium">
-            ₹ {summary.sgst.toFixed(2)}
-          </td>
-        </tr>
+                <tr>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-xs sm:text-sm bg-[#F5FAFE]">
+                    SGST (6%)
+                  </td>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-right font-medium">
+                    ₹ {summary.sgst.toFixed(2)}
+                  </td>
+                </tr>
 
-        <tr>
-          <td className="px-3 py-2 border border-(--color-border) text-sm bg-[#F5FAFE]">
-            CGST (6%)
-          </td>
-          <td className="px-3 py-2 border border-(--color-border) text-right font-medium">
-            ₹ {summary.cgst.toFixed(2)}
-          </td>
-        </tr>
+                <tr>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-xs sm:text-sm bg-[#F5FAFE]">
+                    CGST (6%)
+                  </td>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-right font-medium">
+                    ₹ {summary.cgst.toFixed(2)}
+                  </td>
+                </tr>
 
-        <tr>
-          <td className="px-3 py-2 border border-(--color-border) text-sm bg-[#F5FAFE]">
-            IGST (12%)
-          </td>
-          <td className="px-3 py-2 border border-(--color-border) text-right font-medium">
-            ₹ {summary.igst.toFixed(2)}
-          </td>
-        </tr>
+                <tr>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-xs sm:text-sm bg-[#F5FAFE]">
+                    IGST (12%)
+                  </td>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-right font-medium">
+                    ₹ {summary.igst.toFixed(2)}
+                  </td>
+                </tr>
 
-        {/* Total Row (highlighted) */}
-        <tr className="">
-          <td className="bg-[#FFF7E6] px-3 py-2 border border-(--color-border) font-semibold">
-            Total
-          </td>
-          <td className="px-3 py-2 border border-(--color-border) text-right font-semibold">
-            ₹ {summary.total.toFixed(2)}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-
+                {/* Total Row (highlighted) */}
+                <tr>
+                  <td className="bg-[#FFF7E6] px-2 sm:px-3 py-2 border border-(--color-border) font-semibold">
+                    Total
+                  </td>
+                  <td className="px-2 sm:px-3 py-2 border border-(--color-border) text-right font-semibold">
+                    ₹ {summary.total.toFixed(2)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+     <div className="flex justify-end">
+  <button
+    onClick={() => router.back()}
+    className="px-4 py-1 rounded-2xl text-sm font-medium text-[#FF3B30] border border-[#FF3B30] hover:opacity-90 transition"
+  >
+    Close PO
+  </button>
+</div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ export default function ProjectHeader({
   onAddRoute = () => {},
   onAllotVendor = () => {},
 }) {
-  const router = useRouter(); // <-- ADD THIS
+  const router = useRouter(); 
 
   return (
     <div className="mb-6">
@@ -28,8 +28,8 @@ export default function ProjectHeader({
         <div className="flex items-center gap-4 w-full md:w-auto">
           {/* Back Button */}
           <button
-            onClick={() => router.back()}   // <-- 1 STEP BACK
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800"
+            onClick={() => router.back()}   
+            className="inline-flex items-center gap-2  hover:text-gray-800"
           >
             <Image
               src="/icons/arrow.svg"
@@ -66,7 +66,7 @@ export default function ProjectHeader({
 
       {/* Tabs */}
       <div className="mt-4">
-        <nav className="flex items-center gap-4 text-sm text-gray-600 overflow-x-auto no-scrollbar pb-1">
+        <nav className="flex items-center gap-4 text-sm  overflow-x-auto no-scrollbar pb-4">
           {tabs.map((t) => {
             const isActive = t === activeTab;
             return (
@@ -75,8 +75,8 @@ export default function ProjectHeader({
                 onClick={() => onTabChange(t)}
                 className={`shrink-0 px-5 py-1.5 -mb-px rounded-full transition-colors whitespace-nowrap ${
                   isActive
-                    ? "bg-white border-2 border-(--color-border) font-medium"
-                    : "hover:text-gray-800 text-gray-600"
+                    ? "bg-white text(--color-text)  border-2 border-(--color-border) font-medium"
+                    : "hover:text-(--color-brand) "
                 }`}
                 aria-current={isActive ? "page" : undefined}
               >

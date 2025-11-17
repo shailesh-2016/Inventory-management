@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const Icon = ({ name, className = "w-5 h-5 transition-all duration-200" }) => {
   return (
@@ -24,6 +25,7 @@ export default function Sidebar({
   forceMobile = false,
 }) {
   const [openKeys, setOpenKeys] = useState({});
+  const pathname = usePathname(); // 👈 current route
 
   const nav = [
     { label: "Dashboard", href: "/", icon: "dashboard" },
@@ -86,6 +88,16 @@ export default function Sidebar({
     ? "flex flex-col lg:fixed lg:inset-y-0"
     : "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0";
 
+  const textContainerClass = collapsed
+    ? "opacity-0 w-0 pointer-events-none"
+    : "opacity-100 w-auto";
+
+  // Helper: check active
+  const isLinkActive = (href) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  };
+
   return (
     <aside
       className={`${responsiveRootClass} bg-white border-r border-(--color-border) shadow transition-all duration-300 ${sidebarWidthClass}`}
@@ -97,7 +109,7 @@ export default function Sidebar({
         }`}
       >
         <div
-          className="flex items-center gap-3 cursor-pointer"
+          className="flex items-center gap-3 cursor-pointer overflow-hidden"
           onClick={() => setCollapsed(!collapsed)}
         >
           <Image
@@ -105,14 +117,16 @@ export default function Sidebar({
             alt="Beckhaul Logo"
             width={56}
             height={56}
-            className="object-contain"
+            className="object-contain shrink-0"
           />
-          {!collapsed && (
-            <div>
-              <div className="text-sm font-semibold">Beckhaul Digital</div>
-              <div className="text-xs font-semibold">Inventory Management</div>
+          <div className={`transition-all duration-300 ${textContainerClass}`}>
+            <div className="text-sm font-semibold whitespace-nowrap">
+              Beckhaul Digital
             </div>
-          )}
+            <div className="text-xs font-semibold whitespace-nowrap">
+              Inventory Management
+            </div>
+          </div>
         </div>
       </div>
 
@@ -125,12 +139,18 @@ export default function Sidebar({
           const isOpen = !!openKeys[item.href];
 
           if (!item.hasSub) {
+            const isActive = isLinkActive(item.href);
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`icon-green-hover group flex items-center gap-3 px-3 py-2 rounded-md font-regular hover:bg-gray-50 transition-all duration-300 ${
+                className={`icon-green-hover group flex items-center gap-3 px-3 py-2 ml-2 rounded-md font-regular transition-all duration-300 ${
                   collapsed ? "justify-center" : ""
+                } ${
+                  isActive
+                    ? "bg-gray-50 text-(--color-brand)"
+                    : "hover:bg-gray-50"
                 }`}
                 title={item.label}
               >
@@ -138,22 +158,33 @@ export default function Sidebar({
                   <Icon name={item.icon} />
                 </span>
 
-                {!collapsed && (
-                  <span className="flex-1 group-hover:text-(--color-brand) font-regular transition-colors">
-                    {item.label}
-                  </span>
-                )}
+                <span
+                  className={`group-hover:text-(--color-brand) font-regular transition-all duration-300 whitespace-nowrap ${textContainerClass} flex-1 ${
+                    isActive ? "text-(--color-brand)" : ""
+                  }`}
+                >
+                  {item.label}
+                </span>
               </Link>
             );
           }
+
+          // parent with submenu
+          const isParentActive =
+            isLinkActive(item.href) ||
+            item.children.some((c) => isLinkActive(c.href));
 
           return (
             <div key={item.href} className="mb-1">
               <button
                 type="button"
                 onClick={() => toggle(item.href)}
-                className={`icon-green-hover group w-full flex items-center gap-3 px-3 py-2 rounded-md font-regular hover:bg-gray-50 transition-all duration-300 ${
+                className={`icon-green-hover group w-full flex items-center gap-3 px-3 ml-2 py-2 rounded-md font-regular transition-all duration-300 ${
                   collapsed ? "justify-center" : ""
+                } ${
+                  isParentActive
+                    ? "bg-gray-50 text-(--color-brand)"
+                    : "hover:bg-gray-50"
                 }`}
                 aria-expanded={isOpen}
                 aria-controls={`${item.href}-submenu`}
@@ -163,33 +194,36 @@ export default function Sidebar({
                   <Icon name={item.icon} />
                 </span>
 
-                {!collapsed && (
-                  <>
-                    <span className="flex-1 text-left group-hover:text-(--color-brand) transition-colors">
-                      {item.label}
-                    </span>
+                <div
+                  className={`flex-1 flex items-center transition-all duration-300 ${textContainerClass}`}
+                >
+                  <span
+                    className={`flex-1 text-left group-hover:text-(--color-brand) transition-colors whitespace-nowrap ${
+                      isParentActive ? "text-(--color-brand)" : ""
+                    }`}
+                  >
+                    {item.label}
+                  </span>
 
-                    <svg
-                      className={`w-4 h-4 text-gray-400 transform transition-transform duration-200 ${
-                        isOpen ? "rotate-90" : ""
-                      }`}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      aria-hidden
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </>
-                )}
+                  <svg
+                    className={`w-4 h-4 text-gray-400 transform transition-transform duration-200 shrink-0 ${
+                      isOpen ? "rotate-90" : ""
+                    }`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
               </button>
 
-              {/* Submenu */}
               {!collapsed && (
                 <div
                   id={`${item.href}-submenu`}
@@ -198,18 +232,29 @@ export default function Sidebar({
                   }`}
                 >
                   <div className="pl-9 pr-3 py-1">
-                    {item.children.map((c) => (
-                      <Link
-                        key={c.href}
-                        href={c.href}
-                        className="group flex items-center gap-3 px-3 py-2 rounded-md font-regular text-[#4D4D4D] hover:bg-gray-50 transition-all duration-300"
-                      >
-                        <span className="w-1 h-1 rounded-full bg-(--color-brand)" />
-                        <span className="flex-1 text-gray-600 group-hover:text-(--color-brand)">
-                          {c.label}
-                        </span>
-                      </Link>
-                    ))}
+                    {item.children.map((c) => {
+                      const isChildActive = isLinkActive(c.href);
+                      return (
+                        <Link
+                          key={c.href}
+                          href={c.href}
+                          className={`group flex items-center gap-3 px-3 py-2 rounded-md font-regular text-[#4D4D4D] transition-all duration-300 ${
+                            isChildActive
+                              ? "bg-gray-50 text-(--color-brand)"
+                              : "hover:bg-gray-50"
+                          }`}
+                        >
+                          <span className="w-1 h-1 rounded-full bg-(--color-brand) shrink-0" />
+                          <span
+                            className={`flex-1 text-gray-600 group-hover:text-(--color-brand) whitespace-nowrap ${
+                              isChildActive ? "text-(--color-brand)" : ""
+                            }`}
+                          >
+                            {c.label}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               )}

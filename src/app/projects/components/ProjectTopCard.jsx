@@ -1,11 +1,15 @@
-'use client';
-import React from 'react';
-import BlockProgress from './BlockProgress';
+"use client";
+import React from "react";
+import BlockProgress from "./BlockProgress";
 
-export default function ProjectTopCard({ project = {}, progress: progressProp = null }) {
+export default function ProjectTopCard({
+  project = {},
+  progress: progressProp = null,
+}) {
   const p = project ?? {};
 
-  const progressFromProject = typeof p.progress === 'number' ? p.progress : null;
+  const progressFromProject =
+    typeof p.progress === "number" ? p.progress : null;
 
   const avgFromStats = (() => {
     if (!p.stats) return 0;
@@ -17,31 +21,35 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
   const progress = progressProp ?? progressFromProject ?? avgFromStats ?? 0;
 
   // ---- common class snippets (DRY)
-  const tableBase = 'w-full table-auto bg-white border border-(--color-border) rounded-md shadow-sm border-collapse';
-  const theadBase = 'bg-gray-50 border-b border-(--color-border)';
-  const thCell = 'px-4 py-4 text-left align-middle border border-(--color-border)';
-  const rowBorder = 'border-t border-(--color-border)';
-  const cell = 'px-3 py-2 border border-(--color-border)';
+  const tableBase =
+    "w-full table-auto bg-white border border-(--color-border) rounded-md shadow-sm border-collapse";
+  const theadBase = "bg-gray-50 border-b border-(--color-border)";
+  const thCell =
+    "px-4 py-4 text-left align-middle border border-(--color-border)";
+  const rowBorder = "border-t border-(--color-border)";
+  const cell = "px-3 py-2 border border-(--color-border)";
   const labelCell = `bg-(--color-sky) ${cell} w-36`;
-  const smallTitle = 'text-sm font-semibold mb-3';
-  const docsCard = 'w-36 h-24 bg-gray-50 rounded border border-(--color-border) flex flex-col p-3 text-xs shrink-0';
+  const smallTitle = "text-sm font-semibold mb-3";
+  const docsCard =
+    "w-36 h-24 bg-gray-50 rounded border border-(--color-border) flex flex-col p-3 text-xs shrink-0";
 
   return (
     <div className="overflow-x-auto">
       {/* Desktop / md+ table (unchanged look) */}
       <table className={`${tableBase} hidden md:table`}>
         <thead className={theadBase}>
-          <tr className='bg-white'>
+          <tr className="bg-white">
             <th colSpan={2} className={thCell}>
               <div className="flex items-center justify-between gap-4 ">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-(--color-puple) flex items-center justify-center text-white font-semibold" />
                   <div>
-                    <div className="text-lg font-semibold text-gray-800">{p.name}</div>
+                    <div className="text-lg font-semibold text-gray-800">
+                      {p.name}
+                    </div>
                   </div>
                 </div>
 
-                {/* ---------- RESPONSIVE PROGRESS CONTAINER (only changed) ---------- */}
                 <div className="flex items-center gap-3">
                   <div
                     className="flex items-center justify-between border border-gray-200 rounded-xl p-2 px-4 mx-2 bg-white
@@ -53,7 +61,7 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
                         <BlockProgress
                           value={progress}
                           blocks={10}
-                          blockClass="w-4 h-5 rounded-sm"
+                          blockClass="w-4 h-5"
                           filledClass="bg-[var(--color-orange)]"
                           emptyClass="bg-[var(--color-empty)]"
                           gapClass="gap-[3px]"
@@ -62,7 +70,9 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
                       </div>
                     </div>
 
-                    <span className="font-medium text-base pr-1 ml-2">{progress}</span>
+                    <span className="font-medium text-base pr-1 ml-2">
+                      {progress}
+                    </span>
                   </div>
                 </div>
                 {/* ------------------------------------------------------------------ */}
@@ -76,7 +86,9 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
             <td className={`align-top w-1/2 ${cell} p-4`}>
               <div className={smallTitle}>Project Details</div>
 
-              <table className={`w-full border border-(--color-border) border-collapse text-sm`}>
+              <table
+                className={`w-full border border-(--color-border) border-collapse text-sm`}
+              >
                 <tbody>
                   <tr className="border border-(--color-border)">
                     <td className={labelCell}>Project Head</td>
@@ -148,11 +160,11 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
               <table className="w-full border border-(--color-border) border-collapse text-sm">
                 <tbody>
                   {[
-                    ['T & D', p.stats?.td],
-                    ['Blowing', p.stats?.blowing],
-                    ['Muff', p.stats?.muff],
-                    ['Pole', p.stats?.pole],
-                    ['Stringing', p.stats?.stringing],
+                    ["T & D", p.stats?.td],
+                    ["Blowing", p.stats?.blowing],
+                    ["Muff", p.stats?.muff],
+                    ["Pole", p.stats?.pole],
+                    ["Stringing", p.stats?.stringing],
                   ].map(([label, value], i) => (
                     <tr key={i} className="border border-(--color-border)">
                       <td className={labelCell}>{label}</td>
@@ -168,15 +180,7 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
         </tbody>
       </table>
 
-      {/* =========================
-          MOBILE: exact order requested
-          1) Title
-          2) Progress
-          3) Project Details (table)
-          4) Project Docs / desc
-          5) Company Details (table)
-          6) Scope Targets (table)
-         ========================= */}
+  
       <div className="md:hidden space-y-4">
         {/* 1) Title */}
         <div className="bg-white border border-(--color-border) rounded-md p-4 shadow-sm">
@@ -184,7 +188,7 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
             <div className="w-10 h-10 rounded-full bg-(--color-puple) flex items-center justify-center text-white font-semibold" />
             <div>
               <div className="text-base font-semibold">{p.name}</div>
-              <div className="text-sm text-gray-500">{p.company?.name}</div>
+              {/* <div className="text-sm text-gray-500">{p.company?.name}</div> */}
             </div>
           </div>
         </div>
@@ -193,12 +197,11 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
         <div className="bg-white border border-(--color-border) rounded-md p-4 shadow-sm">
           <div className="text-sm font-medium mb-2">Progress</div>
           <div className="flex items-center justify-start gap-3">
-            <div className="flex-1 min-w-0">
+            <div className=" min-w-0">
               <BlockProgress
                 value={progress}
                 blocks={10}
-                // responsive blocks smaller on narrow screens
-                blockClass="w-3 h-3 sm:w-3 sm:h-4 md:w-4 md:h-5 rounded-sm"
+                blockClass="w-4 h-5 sm:w-3 sm:h-4 md:w-4 md:h-5 "
                 filledClass="bg-[var(--color-orange)]"
                 emptyClass="bg-[var(--color-empty)]"
                 gapClass="gap-2"
@@ -241,9 +244,16 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
           <div className="flex gap-3 flex-wrap">
             {(p.docs || []).length ? (
               (p.docs || []).map((d, i) => (
-                <div key={i} className="w-40 h-20 bg-gray-50 rounded border border-(--color-border) flex flex-col p-3 text-xs">
-                  <div className="font-medium truncate">{d.title ?? 'Reference doc'}</div>
-                  <div className="text-xs mt-auto">{d.date ?? '24/05/2025'}</div>
+                <div
+                  key={i}
+                  className="w-40 h-20 bg-gray-50 rounded border border-(--color-border) flex flex-col p-3 text-xs"
+                >
+                  <div className="font-medium truncate">
+                    {d.title ?? "Reference doc"}
+                  </div>
+                  <div className="text-xs mt-auto">
+                    {d.date ?? "24/05/2025"}
+                  </div>
                 </div>
               ))
             ) : (
@@ -266,12 +276,13 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
               <div className="truncate">{p.company?.address}</div>
             </div>
 
-            <div className="flex gap-3">
-              <div className="flex-1">
+            <div className="space-y-3">
+              <div>
                 <div className="text-xs text-gray-500">State</div>
                 <div>{p.company?.state}</div>
               </div>
-              <div className="flex-1">
+
+              <div>
                 <div className="text-xs text-gray-500">City</div>
                 <div>{p.company?.city}</div>
               </div>
@@ -289,15 +300,17 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
           <div className="text-sm font-medium mb-3">Scope Targets</div>
           <div className="space-y-3">
             {[
-              ['T & D', p.stats?.td],
-              ['Blowing', p.stats?.blowing],
-              ['Muff', p.stats?.muff],
-              ['Pole', p.stats?.pole],
-              ['Stringing', p.stats?.stringing],
+              ["T & D", p.stats?.td],
+              ["Blowing", p.stats?.blowing],
+              ["Muff", p.stats?.muff],
+              ["Pole", p.stats?.pole],
+              ["Stringing", p.stats?.stringing],
             ].map(([label, value], i) => (
               <div key={i} className="flex flex-col">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-sm bg-(--color-sky) px-3 py-1 rounded">{label}</div>
+                  <div className="text-sm bg-(--color-sky) px-3 py-1 rounded">
+                    {label}
+                  </div>
                   <div className="font-medium">{value ?? 0}</div>
                 </div>
 
@@ -305,7 +318,7 @@ export default function ProjectTopCard({ project = {}, progress: progressProp = 
                   <BlockProgress
                     value={value}
                     blocks={10}
-                    blockClass="w-3 h-3 rounded-sm"
+                    blockClass="w-5 h-3.5 "
                     filledClass="bg-[var(--color-orange)]"
                     emptyClass="bg-[var(--color-empty)]"
                     gapClass="gap-2"

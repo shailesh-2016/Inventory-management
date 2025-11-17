@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import SidebarWithSubmenu from "./Sidebar";
 import Topbar from "./Topbar";
@@ -8,21 +9,21 @@ export default function Layout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
 
   const contentPaddingClass = collapsed ? "lg:pl-20" : "lg:pl-64";
-
   const rootOverflowClass = mobileOpen ? "overflow-hidden" : "";
 
   return (
-    <div className={`min-h-screen flex bg-gray-50 ${rootOverflowClass}`}>
+    <div className={`min-h-screen flex  ${rootOverflowClass}`}>
       <SidebarWithSubmenu collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Background overlay */}
           <div
             className="fixed inset-0 bg-black/30"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed left-0 top-0 bottom-0 w-64 h-full bg-white border-r p-4 overflow-y-auto">
+
+          <div className="fixed left-0 top-0 bottom-0 w-64 h-full bg-white p-1  ">
             <div className="mb-4 flex items-center justify-end">
               <button
                 onClick={() => setMobileOpen(false)}
@@ -54,10 +55,17 @@ export default function Layout({ children }) {
         </div>
       )}
 
-      <div className={`flex-1 min-w-0 ${contentPaddingClass}`}>
-        <Topbar onToggleSidebar={() => setMobileOpen((s) => !s)} />
+      <div
+        className={`flex-1 min-w-0 transition-all duration-300 ${contentPaddingClass}`}
+      >
+        <Topbar
+          onToggleSidebar={() => setMobileOpen((s) => !s)}
+          collapsed={collapsed}
+          onToggleCollapse={() => setCollapsed((c) => !c)}
+        />
+
         <main className="p-6">
-          <div className="max-w-7xl mx-auto">{children}</div>
+          <div className="w-full">{children}</div>
         </main>
       </div>
     </div>

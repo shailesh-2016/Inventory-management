@@ -5,17 +5,23 @@ export default function Topbar({ onToggleSidebar }) {
   const [openProfile, setOpenProfile] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 bg-white  border-b border-(--color-border)">
-      <div className="flex items-center justify-between h-16 px-4">
+    <header className="sticky top-0 z-20 bg-white border-b border-(--color-border)">
+      <div
+        className="
+          flex items-center justify-between
+          h-14 sm:h-16       /* ⬅️ height change */
+          px-3 sm:px-4      /* ⬅️ padding change */
+        "
+      >
         {/* Left Section */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={onToggleSidebar}
-            className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            className="lg:hidden p-1.5 sm:p-2 rounded-md hover:bg-gray-100"
             aria-label="Open menu"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 sm:w-6 sm:h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -34,29 +40,35 @@ export default function Topbar({ onToggleSidebar }) {
           </div>
         </div>
 
-        {/* Right Section (Bell + Profile together) */}
-        <div className="relative flex items-center">
-          <button className="rounded-md hover:bg-gray-100 relative">
+        {/* Right Section */}
+        <div className="relative flex items-center gap-0.5 sm:gap-1">
+          <button className="rounded-md hover:bg-gray-100 p-1 sm:p-1.5">
             <img
               src="/icons/bell.svg"
               alt="Notifications"
-              className="w-6 h-6"
-              width={20}
-              height={20}
+              className="w-5 h-5 sm:w-6 sm:h-6 "
             />
           </button>
 
-          {/* 👤 Profile dropdown */}
-          <div>
+          {/* Profile Dropdown */}
+          <div className="relative">
             <button
               onClick={() => setOpenProfile((s) => !s)}
-              className="flex items-center gap-2 p-1 px-3 rounded-md hover:bg-gray-100"
+              className="flex items-center gap-1 sm:gap-2 py-1 px-2 sm:px-3 rounded-md hover:bg-gray-100"
             >
-              <div className="w-8 h-8 rounded-full border bg-[#FFCC00] flex items-center justify-center">
+              <div
+                className="
+                  rounded-full border bg-[#FFCC00] flex items-center justify-center
+                  w-7 h-7 text-xs
+                  sm:w-8 sm:h-8 sm:text-sm
+                "
+              >
                 YP
               </div>
+
+              {/* Hide Arrow + Name on very small screens */}
               <svg
-                className="w-4 h-4 text-gray-500"
+                className="w-3.5 h-3.5 text-gray-500 hidden sm:block"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -71,7 +83,7 @@ export default function Topbar({ onToggleSidebar }) {
             </button>
 
             {openProfile && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-sm py-2">
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-white border rounded-md shadow-sm py-2">
                 <a
                   href="#"
                   className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"

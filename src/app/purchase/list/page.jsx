@@ -74,11 +74,11 @@ function LabelRow({ label, value, labelBg = "bg-[#FFF7E6]" }) {
   return (
     <tr>
       <td
-        className={`${labelBg} text-sm font-medium px-3 py-2 border border-(--color-border)  w-44`}
+        className={`${labelBg} text-xs sm:text-sm font-medium px-2 sm:px-3 py-2 border border-(--color-border) w-32 sm:w-44 whitespace-nowrap`}
       >
         {label}
       </td>
-      <td className="text-xs font-medium  px-3 py-2 border border-(--color-border)">
+      <td className="text-xs sm:text-sm font-medium px-2 sm:px-3 py-2 border border-(--color-border)">
         {value ?? "-"}
       </td>
     </tr>
@@ -87,23 +87,37 @@ function LabelRow({ label, value, labelBg = "bg-[#FFF7E6]" }) {
 
 export default function POTimelinePage() {
   return (
-    <div className="min-h-screen">
-      {/* existing header (unchanged) */}
+    <div className="min-h-screen mx-6 -mt-4 ">
+      {/* Header as is */}
       <OHeader title="#PO0001" />
 
       {/* main container */}
-      <div className="max-w-[1200px] mx-auto px-4 py-6">
-        {/* outer white card that holds timeline rows */}
+      <div className="-mx-8 px-3 sm:px-4 lg:px-0 py-4 sm:py-6 -mt-4">
+        {/* outer white card */}
         <div className="bg-white border border-(--color-border) rounded-md overflow-hidden">
           <div className="p-4 space-y-6">
-            {/* each timeline item: [date | center(dot+line) | content] */}
             {timelineData.map((t, idx) => (
               <div
                 key={t.key}
-                className="grid grid-cols-[120px_48px_1fr] gap-4 items-stretch"
+                className="
+                  flex flex-col gap-3
+                  md:grid md:grid-cols-[120px_48px_minmax(0,1fr)]
+                  md:gap-4 md:items-stretch
+                "
               >
-                {/* DATE column */}
-                <div className="text-xs text-(--color-grey) flex items-start pt-1">
+                {/* DATE - mobile (top) */}
+                <div className="flex md:hidden items-center gap-2 text-xs text-(--color-grey) mt-1">
+                  <img
+                    src="/icons/check.svg"
+                    alt=""
+                    className="w-4 h-4"
+                    loading="lazy"
+                  />
+                  <span>{t.date}</span>
+                </div>
+
+                {/* DATE - desktop (left column) */}
+                <div className="hidden md:flex text-xs text-(--color-grey) items-start pt-1">
                   <div className="flex items-center gap-2">
                     <img
                       src="/icons/check.svg"
@@ -111,35 +125,47 @@ export default function POTimelinePage() {
                       className="w-4 h-4"
                       loading="lazy"
                     />
-                    <div>{t.date}</div>
+                    <div className="whitespace-nowrap">{t.date}</div>
                   </div>
                 </div>
 
-                {/* CENTER column: dot + vertical line that stretches to match content height */}
-                <div className="flex flex-col items-center">
+                {/* CENTER column: dot + line (desktop only) */}
+                <div className="hidden md:flex flex-col items-center">
                   {/* dot */}
-                      <img src="/icons/dot.svg" className="w-4 h-4" loading="lazy" />
-                  {/* line fills remaining height of this grid row */}
-                <div className="w-px bg-(--color-brand) h-full" />
-
+                  <img
+                    src="/icons/dot.svg"
+                    className="w-4 h-4"
+                    loading="lazy"
+                    alt=""
+                  />
+                  {/* vertical line */}
+                  <div className="w-px bg-(--color-brand) flex-1 mt-1 h-full" />
                 </div>
 
                 {/* CONTENT column */}
                 <div>
-                  <div className="mb-3 font-semibold text-sm">{t.title}</div>
+                  {/* Title */}
+                  <div className="mb-3 font-semibold text-sm sm:text-base">
+                    {t.title}
+                  </div>
 
+                  {/* CONTENT: booked */}
                   {t.contentType === "booked" && (
                     <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* top header tables */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         <div className="bg-white border border-(--color-border)">
-                          <table className="w-full border-collapse">
+                          <table className="w-full border-collapse table-auto">
                             <tbody>
                               <LabelRow
                                 label="PO Type"
                                 value={t.header.poType}
                                 labelBg="bg-[#FFF7E6]"
                               />
-                              <LabelRow label="PO No." value={t.header.poNo} />
+                              <LabelRow
+                                label="PO No."
+                                value={t.header.poNo}
+                              />
                               <LabelRow
                                 label="Ref No."
                                 value={t.header.refNo}
@@ -149,7 +175,7 @@ export default function POTimelinePage() {
                         </div>
 
                         <div className="bg-white border border-(--color-border)">
-                          <table className="w-full border-collapse">
+                          <table className="w-full border-collapse table-auto">
                             <tbody>
                               <LabelRow
                                 label="Project"
@@ -160,91 +186,153 @@ export default function POTimelinePage() {
                                 label="Circle"
                                 value={t.header.circle}
                               />
-                              <LabelRow label="Route" value={t.header.route} />
+                              <LabelRow
+                                label="Route"
+                                value={t.header.route}
+                              />
                             </tbody>
                           </table>
                         </div>
-
-                        
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                      {/* From / To tables */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mt-2">
                         {/* FROM */}
                         <div className="bg-white border border-(--color-border)">
-                          <div className="px-4 py-3 border-b border-(--color-border)">
-                            <h4 className="text-sm font-semibold">From</h4>
+                          <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-(--color-border)">
+                            <h4 className="text-sm sm:text-base font-semibold">
+                              From
+                            </h4>
                           </div>
-                          <table className="w-full border-collapse">
-                            <tbody>
-                              <LabelRow
-                                label="Vendor"
-                                value={t.from.vendor}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow
-                                label="Phone No."
-                                value={<a className="text-blue-600">{t.from.phone}</a>}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow
-                                label="Address"
-                                value={t.from.address}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow label="State" value={t.from.state} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow
-                                label="City"
-                                value={t.from.city}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow label="Pincode" value={t.from.pincode} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow
-                                label="GSTIN / UIN"
-                                value={t.from.gst}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow label="PAN" value={t.from.pan} labelBg="bg-[#F5FAFE]" />
-                            </tbody>
-                          </table>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse table-auto">
+                              <tbody>
+                                <LabelRow
+                                  label="Vendor"
+                                  value={t.from.vendor}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Phone No."
+                                  value={
+                                    <a className="text-(--color-blue)">
+                                      {t.from.phone}
+                                    </a>
+                                  }
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Address"
+                                  value={t.from.address}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="State"
+                                  value={t.from.state}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="City"
+                                  value={t.from.city}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Pincode"
+                                  value={t.from.pincode}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="GSTIN / UIN"
+                                  value={t.from.gst}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="PAN"
+                                  value={t.from.pan}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
 
                         {/* TO */}
                         <div className="bg-white border border-(--color-border)">
-                          <div className="px-4 py-3 border-b border-(--color-border)">
-                            <h4 className="text-sm font-semibold">To</h4>
+                          <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-(--color-border)">
+                            <h4 className="text-sm sm:text-base font-semibold">
+                              To
+                            </h4>
                           </div>
-                          <table className="w-full border-collapse">
-                            <tbody>
-                              <LabelRow
-                                label="Warehouse"
-                                value={t.to.warehouse}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow label="Concern Person" value={t.to.person} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow
-                                label="Phone No."
-                                value={<a className="text-[--color-blue]">{t.to.phone}</a>}
-                                labelBg="bg-[#F5FAFE]"
-                              />
-                              <LabelRow label="Address" value={t.to.address} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow label="State" value={t.to.state} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow label="City" value={t.to.city}  labelBg="bg-[#F5FAFE]"/>
-                              <LabelRow label="Pincode" value={t.to.pincode} labelBg="bg-[#F5FAFE]" />
-                              <LabelRow label="GSTIN / UIN" value={t.to.gst} labelBg="bg-[#F5FAFE]" />
-                            </tbody>
-                          </table>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border-collapse table-auto">
+                              <tbody>
+                                <LabelRow
+                                  label="Warehouse"
+                                  value={t.to.warehouse}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Concern Person"
+                                  value={t.to.person}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Phone No."
+                                  value={
+                                    <a className="text-(--color-blue)">
+                                      {t.to.phone}
+                                    </a>
+                                  }
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Address"
+                                  value={t.to.address}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="State"
+                                  value={t.to.state}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="City"
+                                  value={t.to.city}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="Pincode"
+                                  value={t.to.pincode}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                                <LabelRow
+                                  label="GSTIN / UIN"
+                                  value={t.to.gst}
+                                  labelBg="bg-[#F5FAFE]"
+                                />
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
                     </div>
                   )}
 
+                  {/* CONTENT: simple key-value blocks */}
                   {t.contentType === "kv" && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                       {t.fields.map((f, i) => (
-                        <div key={i} className="bg-white border border-(--color-border)">
-                          <table className="w-full border-collapse">
+                        <div
+                          key={i}
+                          className="bg-white border border-(--color-border)"
+                        >
+                          <table className="w-full border-collapse table-auto">
                             <tbody>
-                              <LabelRow label={f.k} value={f.v} labelBg="bg-[#FFF7E6]" />
+                              <LabelRow
+                                label={f.k}
+                                value={f.v}
+                                labelBg="bg-[#FFF7E6]"
+                              />
                             </tbody>
                           </table>
                         </div>
@@ -254,7 +342,6 @@ export default function POTimelinePage() {
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </div>

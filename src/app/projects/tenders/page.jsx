@@ -57,8 +57,8 @@ export default function Page({ params }) {
 
   return (
     <div className="w-full">
-      {/* Header - ultra minimal padding */}
-      <div className="px-1 md:px-2">
+      {/* Header - same spacing all devices */}
+      <div className=" px-0 -mt-2">
         <ProjectHeader
           projectName={project.name}
           projectLink="/projects"
@@ -74,17 +74,15 @@ export default function Page({ params }) {
           onAllotVendor={handleAllotVendor}
           onAddRoute={handleAddRoute}
         />
-
-        
       </div>
 
       {/* Project Top Card */}
-      <div className="px-1 md:px-2">
+      <div className=" px-0 -mt-2">
         <ProjectTopCard project={project} progress={progressValue} />
       </div>
 
       {/* RoutesBlock */}
-      <div className="mt-8 mb-2 px-1 md:px-2">
+      <div className="mt-2 mb-2 px-0 ">
         <RoutesBlock rows={project.routes} initialState="Gujarat" />
       </div>
     </div>
